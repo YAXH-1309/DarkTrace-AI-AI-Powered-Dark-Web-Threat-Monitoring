@@ -1,91 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 :root {
-  /* Sentinel Aesthetic Variables */
-  --bg-base: #0a0e14;
-  --bg-surface: #0f141a;
-  --bg-elevated: #151a21;
-  --bg-glass: rgba(32, 38, 47, 0.6);
-  
-  --text-primary: #f1f3fc;
-  --text-secondary: #a8abb3;
-  
-  --brand-primary: #4D00FF;
-  --brand-gradient: linear-gradient(135deg, #aea2ff, #a092ff);
-  
-  /* Risk Status Indicators */
-  --status-high: #ff6e84;
-  --status-high-bg: rgba(255, 110, 132, 0.1);
-  --status-medium: #e8b031; /* Golden Yellow for medium instead of Indigo as per prompt */
-  --status-medium-bg: rgba(232, 176, 49, 0.1);
-  --status-low: #24f07e;
-  --status-low-bg: rgba(36, 240, 126, 0.1);
+  /* The Sentinel Prism Aesthetic */
+  --bg-void: #09090b;
+  --bg-card: #1a1a22;
+  --bg-card-hover: #1f1f26;
 
-  --border-ghost: rgba(68, 72, 79, 0.15);
+  /* Neons */
+  --neon-pink: #FF007F;
+  --neon-purple: #7000FF;
+  --neon-cyan: #00F5FF;
+
+  /* Status Colors */
+  --status-high: #FF007F;
+  --status-med: #ac89ff;
+  --status-low: #00F5FF;
   
+  --text-primary: #f9f5f8;
+  --text-secondary: #adaaad;
+  
+  --border-ghost: rgba(255, 255, 255, 0.05);
+
   --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-body: 'Manrope', sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background-color: var(--bg-base);
+  background-color: var(--bg-void);
   color: var(--text-primary);
   font-family: var(--font-body);
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02em; }
+
+/* The "No Line" Flat Card */
+.sentinel-card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  transition: background-color 0.2s ease;
+}
+
+/* Gradients & Glows */
+.text-gradient {
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pill-nav {
+  background: rgba(26, 26, 34, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border: 1px solid var(--border-ghost);
+}
+
+.nav-item {
+  color: var(--text-secondary);
+  padding: 10px 24px;
+  border-radius: 9999px;
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: -0.02em;
-}
-
-/* Glassmorphism Classes */
-.glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-ghost);
-  border-radius: 12px;
-}
-
-/* Base Classes */
-.app-container {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 24px;
-}
-
-/* Button Reset */
-button {
+  font-size: 0.9rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-item.active {
+  color: var(--text-primary);
+}
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background-color: var(--neon-purple);
+  box-shadow: 0 0 10px var(--neon-purple);
+}
+
+/* Button */
+.btn-neon {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  color: white;
+  font-family: var(--font-display);
   border: none;
-  background: none;
+  border-radius: 9999px;
+  padding: 10px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+.btn-neon:hover { transform: scale(1.05); }
+
+/* Segmented Blocks */
+.segmented-risk {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+.risk-block {
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  background-color: rgba(255,255,255,0.05);
+}
+.risk-block.filled-high { background-color: var(--status-high); box-shadow: 0 0 6px rgba(255,0,127,0.5); }
+.risk-block.filled-med { background-color: var(--status-med); box-shadow: 0 0 6px rgba(172,137,255,0.5); }
+.risk-block.filled-low { background-color: var(--status-low); box-shadow: 0 0 6px rgba(0,245,255,0.5); }
+
+/* Custom Overrides for inputs */
+select, input {
+  background-color: #000;
+  color: var(--text-primary);
+  border: 1px solid var(--border-ghost);
+  border-radius: 8px;
+  padding: 10px 16px;
   font-family: var(--font-body);
 }
-
-.btn-primary {
-  background: var(--brand-gradient);
-  color: #1f0078;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 8px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-.btn-primary:hover {
-  transform: translateY(-1px);
-  opacity: 0.9;
+select:focus, input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
 }
