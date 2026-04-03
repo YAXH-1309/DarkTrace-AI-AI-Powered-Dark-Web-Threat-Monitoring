@@ -1,0 +1,17 @@
+[
+  {
+    "id": "b2_001",
+    "content": "Database dump from Acme Corp: user: developer@acmecorp.com pass=SuperSecret2024",
+    "timestamp": "2024-05-16T08:00:00Z"
+  },
+  {
+    "id": "b2_002",
+    "content": "AWS Key leaked: AKIAIOSFODNN7EXAMPLE login at example.com",
+    "timestamp": "2024-05-16T08:15:00Z"
+  },
+  {
+    "id": "b2_003",
+    "content": "Random logs with token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "timestamp": "2024-05-16T08:30:00Z"
+  }
+]

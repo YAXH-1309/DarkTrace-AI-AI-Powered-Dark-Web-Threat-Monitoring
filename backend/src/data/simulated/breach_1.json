@@ -1,0 +1,17 @@
+[
+  {
+    "id": "b1_001",
+    "content": "Admin user leaked: username: admin@example.com password: Password123! from internal directory.",
+    "timestamp": "2024-05-15T12:00:00Z"
+  },
+  {
+    "id": "b1_002",
+    "content": "API Keys found in public repository: sk_live_8xQ9yZ2pL4mK0vN1wR3sT5bH",
+    "timestamp": "2024-05-15T12:05:00Z"
+  },
+  {
+    "id": "b1_003",
+    "content": "List of emails: john.doe@example.com, alice.smith@otherdomain.org, bob.jones@example.com [No passwords found]",
+    "timestamp": "2024-05-15T12:10:00Z"
+  }
+]
