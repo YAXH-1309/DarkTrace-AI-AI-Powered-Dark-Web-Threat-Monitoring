@@ -31,23 +31,10 @@ function App() {
           </span>
         </div>
 
-        {/* Center: Pill Navigation */}
-        <nav className="pill-nav">
-          <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
-            Dashboard
-          </div>
-          <div className="nav-item">Exposures</div>
-          <div className="nav-item">Threats</div>
-          <div className={`nav-item ${activeTab === 'orgconfig' ? 'active' : ''}`} onClick={() => setActiveTab('orgconfig')}>
-            Settings
-          </div>
-        </nav>
+        {/* Center: Removed navigation to make Dashboard the true centralized console */}
 
         {/* Right: Actions */}
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <div className="pill-nav" style={{ padding: '10px' }}>
-            <Search size={18} color="var(--text-secondary)" />
-          </div>
           <div className="pill-nav" style={{ display: 'flex', gap: '12px', padding: '6px 16px 6px 6px' }}>
             <div style={{ 
               width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#2a2a35',
@@ -65,8 +52,7 @@ function App() {
 
       {/* Main Content Area */}
       <main style={{ flex: 1 }}>
-        {activeTab === 'dashboard' && <Dashboard />}
-        {activeTab === 'orgconfig' && <OrgConfig />}
+        <Dashboard />
       </main>
     </div>
   );

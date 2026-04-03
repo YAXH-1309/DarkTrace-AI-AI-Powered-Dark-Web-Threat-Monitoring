@@ -2,14 +2,16 @@ import express from 'express';
 
 const router = express.Router();
 
-let mockOrgConfig = {
+export let mockOrgConfig = {
   domains: ['example.com', 'acmecorp.com', 'global.corp'],
-  keywords: ['confidential', 'source_code', 'breach'],
+  keywords: ['project_titan', 'credit_bins', 'ceo_private_email@example.com'],
   alertPreferences: {
     soundEnabled: true,
     highRiskOnly: false
   }
 };
+
+export const getOrgConfig = () => mockOrgConfig;
 
 router.get('/config', (req, res) => {
   res.json(mockOrgConfig);

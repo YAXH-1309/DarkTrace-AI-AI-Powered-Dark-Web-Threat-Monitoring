@@ -1,58 +1,48 @@
-import { ThreatIntelligenceCollector } from './ThreatIntelligenceCollector.js';
+import { ScrapingNode } from './ScrapingNode.js';
 import { ThreatAnalyzer } from './ThreatAnalyzer.js';
 import { RiskScorer } from './RiskScorer.js';
 import { supabase } from './SupabaseClient.js';
+import { getOrgConfig } from '../routes/organization.js';
 import { alertSystem } from './AlertSystem.js';
 
-export class Pipeline {
-  constructor(organizationConfig) {
-    this.collector = new ThreatIntelligenceCollector();
-    this.analyzer = new ThreatAnalyzer();
-    this.scorer = new RiskScorer();
-    this.organizationConfig = organizationConfig;
-  }
+export async function startPoller() {
+  console.log('Pipeline started. Monitoring Dark Web endpoints for targeted configuration...');
 
-  start(dataSources) {
-    this.collector.subscribe(async (collectedData) => {
-      try {
-        const threats = await this.analyzer.analyzeData(collectedData, this.organizationConfig);
-        for (let threat of threats) {
-          threat = this.scorer.assignRiskLevel(threat);
-          await this.saveThreat(threat);
-          // Push to SSE clients
-          alertSystem.triggerAlert(threat);
+  setInterval(async () => {
+    try {
+      const config = getOrgConfig();
+      const targets = [...config.domains, ...config.keywords];
+      
+      if (targets.length === 0) return;
+
+      // 1. Emulate AI Deep Web Scraper
+      const rawScrapes = await ScrapingNode.startScrape(targets);
+      
+      // 2. Multi-Vector Analysis Engine
+      const threats = await ThreatAnalyzer.analyzeTargetedData(rawScrapes, config.domains, config.keywords);
+      
+      if (threats.length === 0) return;
+
+      // 3. Process Hits
+      for (const t of threats) {
+        // Enforce risk levels
+        const scoredThreat = {
+           ...t,
+           risk_level: RiskScorer.calculateRiskScore(t)
+        };
+        
+        // Push to DB
+        const { error } = await supabase.from('threats').insert([scoredThreat]);
+        if (error) console.error('Failed to save targeted threat to Supabase:', error);
+        
+        // Push Alert
+        if (alertSystem) {
+          alertSystem.triggerAlert(scoredThreat);
         }
-      } catch (error) {
-        console.error('Error processing collected data:', error);
       }
-    });
 
-    this.collector.startScanning(dataSources);
-  }
-
-  stop() {
-    this.collector.stopScanning();
-  }
-
-  async saveThreat(threat) {
-    const { error } = await supabase.from('threats').insert([{
-      organization_id: threat.organizationId,
-      organization_domains: this.organizationConfig.domains,
-      category: threat.category,
-      sensitive_data_type: threat.sensitive_data_type,
-      sensitive_data_value: threat.sensitive_data_value,
-      source_id: threat.sourceId,
-      source_type: threat.sourceType,
-      detected_at: threat.detectedAt,
-      keywords: threat.keywords,
-      context_snippet: threat.context_snippet,
-      risk_level: threat.riskLevel
-    }]);
-
-    if (error) {
-      console.error('Failed to save threat to Supabase:', error);
-    } else {
-      console.log('Saved threat:', threat.category, threat.riskLevel);
+    } catch (err) {
+      console.error('Error in deep web pipeline pass:', err);
     }
-  }
+  }, 10000); // 10 second polling for MVP showcase
 }

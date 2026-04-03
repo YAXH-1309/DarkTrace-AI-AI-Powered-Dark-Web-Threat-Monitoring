@@ -48,6 +48,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02
 .text-gradient {
   background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -118,16 +119,39 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02
 .risk-block.filled-med { background-color: var(--status-med); box-shadow: 0 0 6px rgba(172,137,255,0.5); }
 .risk-block.filled-low { background-color: var(--status-low); box-shadow: 0 0 6px rgba(0,245,255,0.5); }
 
-/* Custom Overrides for inputs */
-select, input {
-  background-color: #000;
-  color: var(--text-primary);
-  border: 1px solid var(--border-ghost);
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-family: var(--font-body);
+/* Animations */
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
-select:focus, input:focus {
-  outline: none;
-  border-color: var(--neon-cyan);
+
+@keyframes slideDown {
+  from { max-height: 0; opacity: 0; overflow: hidden; }
+  to { max-height: 500px; opacity: 1; }
 }
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.3; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.3; }
+}
+
+.scanning-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--neon-pink);
+  border-radius: 50%;
+  animation: pulse 1s infinite ease-in-out;
+}
+
+.feed-row:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+.pill-nav.active {
+  background: var(--neon-purple);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 0 15px rgba(172, 137, 255, 0.4);
+}
+

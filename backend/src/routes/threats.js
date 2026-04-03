@@ -11,10 +11,7 @@ router.get('/stream', (req, res) => {
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
-  alertSystem.clients.push(res);
-  req.on('close', () => {
-    alertSystem.clients = alertSystem.clients.filter(client => client !== res);
-  });
+  alertSystem.addClient(req, res);
 });
 
 router.get('/', async (req, res) => {
@@ -43,6 +40,55 @@ router.get('/trends', async (req, res) => {
     labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
     data: [12, 19, 15, 25, 22, 30]
   });
+});
+
+import { DummyDatabase } from '../services/DummyDatabase.js';
+import { IntelligenceScanner } from '../services/IntelligenceScanner.js';
+
+router.post('/fetch', async (req, res) => {
+  try {
+    const { domain } = req.body;
+    if (!domain) return res.status(400).json({ error: 'Domain is required.' });
+
+    // Parallel fetch: Fixed dummy data + Real-time OSINT mentions across web (Reddit)
+    const [mockHits, liveHits] = await Promise.all([
+      DummyDatabase.fetchTargetData(domain),
+      IntelligenceScanner.scanLiveEndpoints(domain)
+    ]);
+    
+    // Combine results (Live hits at the top for freshness)
+    const intelligence = [...liveHits, ...mockHits].slice(0, 15);
+    
+    // Construct dynamic stats
+    const stats = {
+      total: intelligence.length,
+      high: intelligence.filter(d => d.risk_level === 'High').length,
+      medium: intelligence.filter(d => d.risk_level === 'Medium').length,
+      low: intelligence.filter(d => d.risk_level === 'Low').length
+    };
+
+    // Construct dynamic trends based on the risks
+    const trends = {
+      labels: ['T-5h', 'T-4h', 'T-3h', 'T-2h', 'T-1h', 'Now'],
+      highData: [0, 0, stats.high > 2 ? 1 : 0, stats.high > 1 ? 1 : 0, stats.high > 0 ? 1 : 0, stats.high],
+      mediumData: [0, Math.floor(stats.medium / 2), stats.medium > 1 ? 1 : 0, Math.floor(stats.medium / 1.5), stats.medium, stats.medium],
+      lowData: [stats.low / 2, stats.low / 2, stats.low, stats.low, stats.low, stats.low]
+    };
+
+    // Simulated Analysis Logs for UI "Intelligence Phase"
+    const scanLogs = [
+      "Establishing Secure OSINT Link...",
+      `Scanning Public Reddit Nodes for mention of ${domain}...`,
+      "Analyzing Deep Web Paste Dumps...",
+      "Resolving PII Overlaps and Financial Indicators...",
+      "Threat Analysis Complete. Results Compiled."
+    ];
+
+    res.json({ threats: intelligence, stats, trends, scanLogs });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 export default router;

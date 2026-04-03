@@ -1,14 +1,12 @@
 export class RiskScorer {
-  assignRiskLevel(threat) {
-    if (threat.category === 'API_Key_Exposure') {
-      threat.riskLevel = 'High';
-    } else if (threat.category === 'Credential_Leak') {
-      threat.riskLevel = 'Medium';
-    } else if (threat.category === 'Email_Leak') {
-      threat.riskLevel = 'Low';
-    } else {
-      threat.riskLevel = 'Low'; // default
+  static calculateRiskScore(threat) {
+    if (threat.category === 'Financial Data' || threat.category === 'Corporate Secrets') {
+      return 'High';
+    } else if (threat.category === 'PII/Sensitive Data') {
+      return 'Medium';
+    } else if (threat.category === 'General Mention') {
+      return 'Low';
     }
-    return threat;
+    return 'Low';
   }
 }

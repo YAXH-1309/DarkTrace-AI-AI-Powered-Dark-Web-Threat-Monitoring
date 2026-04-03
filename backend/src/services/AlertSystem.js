@@ -3,7 +3,7 @@ export class AlertSystem {
     this.clients = [];
   }
 
-  addClient(res) {
+  addClient(req, res) {
     this.clients.push(res);
     req.on('close', () => {
       this.clients = this.clients.filter(client => client !== res);
@@ -11,7 +11,7 @@ export class AlertSystem {
   }
 
   triggerAlert(threat) {
-    if (threat.riskLevel === 'High') {
+    if (threat.risk_level === 'High') {
       this.broadcast({ type: 'ALERT', data: threat });
     } else {
       this.broadcast({ type: 'NEW_THREAT', data: threat });
