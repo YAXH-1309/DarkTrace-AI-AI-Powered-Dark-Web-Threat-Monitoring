@@ -390,25 +390,3 @@ Post-MVP improvements:
 6. **Threat Intelligence Feeds**: Integration with commercial threat intel providers
 7. **Automated Response**: Automatic password reset triggers, account lockouts
 8. **Compliance Reporting**: GDPR, SOC2, ISO27001 compliance reports
-
-### Development Roadmap
-
-**Phase 1 (Hackathon MVP - 48 hours)**:
-- Core data collection with simulated sources
-- Basic threat detection (regex-based)
-- Simple risk scoring
-- Dashboard with live updates
-- Alert system with popups
-
-**Phase 2 (Post-Hackathon - 2 weeks)**:
-- Property-based test suite
-- Error handling improvements
-- Performance optimization
-- Basic authentication
-
-**Phase 3 (Production Ready - 1 month)**:
-- Real threat intelligence integration
-- Advanced ML models
-- Multi-tenancy support
-- Comprehensive security audit
-
