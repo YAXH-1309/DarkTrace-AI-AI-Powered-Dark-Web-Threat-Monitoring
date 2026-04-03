@@ -152,6 +152,28 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02
   background: var(--neon-purple);
   color: white;
   border-color: transparent;
-  box-shadow: 0 0 15px rgba(172, 137, 255, 0.4);
+  box-shadow: 0 0 15px rgba(172, 132, 255, 0.4);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+.hover-bright:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  filter: brightness(1.2);
+}
+
+.animate-spin {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 

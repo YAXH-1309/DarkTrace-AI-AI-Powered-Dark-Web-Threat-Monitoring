@@ -15,6 +15,24 @@ export const fetchTrends = async () => {
   return res.json();
 };
 
+export const login = async (username, password) => {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+  return res.json();
+};
+
+export const register = async (username, password, display_name) => {
+  const res = await fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password, display_name })
+  });
+  return res.json();
+};
+
 export const fetchOrgConfig = async () => {
   const res = await fetch(`${BASE_URL}/organization/config`);
   return res.json();

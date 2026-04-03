@@ -2,6 +2,7 @@ import express from 'express';
 import { startPoller } from './services/Pipeline.js';
 import threatRoutes from './routes/threats.js';
 import orgRoutes from './routes/organization.js';
+import authRoutes from './routes/auth.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 // Routes
 app.use('/api/threats', threatRoutes);
 app.use('/api/organization', orgRoutes);
+app.use('/api/auth', authRoutes);
 
 async function start() {
   console.log('Initializing DarkTrace AI Backend Pipeline...');

@@ -9,7 +9,14 @@ let client;
 
 if (supabaseUrl.includes('xyzcompany')) {
   console.warn('⚠️  Using IN-MEMORY Mock Supabase database because a valid SUPABASE_URL was absent in .env');
-  const _db = { threats: [], data_sources: [] };
+  const _db = { 
+    threats: [], 
+    data_sources: [],
+    users: [
+      { id: 'u1', username: 'admin123', password: 'admin123', role: 'admin', display_name: 'Alex Rock' },
+      { id: 'u2', username: 'org123', password: 'org123', role: 'organization', display_name: 'Sentintel Org' }
+    ]
+  };
   
   client = {
     from: (table) => ({
