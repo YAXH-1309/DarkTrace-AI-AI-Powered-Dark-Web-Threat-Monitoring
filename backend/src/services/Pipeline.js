@@ -2,6 +2,7 @@ import { ThreatIntelligenceCollector } from './ThreatIntelligenceCollector.js';
 import { ThreatAnalyzer } from './ThreatAnalyzer.js';
 import { RiskScorer } from './RiskScorer.js';
 import { supabase } from './SupabaseClient.js';
+import { alertSystem } from './AlertSystem.js';
 
 export class Pipeline {
   constructor(organizationConfig) {
@@ -18,6 +19,8 @@ export class Pipeline {
         for (let threat of threats) {
           threat = this.scorer.assignRiskLevel(threat);
           await this.saveThreat(threat);
+          // Push to SSE clients
+          alertSystem.triggerAlert(threat);
         }
       } catch (error) {
         console.error('Error processing collected data:', error);
