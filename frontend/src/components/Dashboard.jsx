@@ -101,7 +101,6 @@ export default function Dashboard() {
     setFilteredThreats([]);
     
     try {
-      // Logic for simulating the "Thinking/Scanning" phase with the real logs from backend
       const response = await fetch('/api/threats/fetch', {
         method: 'POST',
         headers: {
@@ -110,29 +109,31 @@ export default function Dashboard() {
         body: JSON.stringify({ domain: domainInput })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      if (!response.ok) throw new Error(data.error || 'Uplink synchronization failed.');
 
-      // Cycle through logs for effect
+      // Dynamic log cycle for visual impact (snappier)
       if (data.scanLogs) {
         for (const log of data.scanLogs) {
           setActiveLog(log);
-          await new Promise(r => setTimeout(r, 600));
+          await new Promise(r => setTimeout(r, 400));
         }
       }
       
-      setThreats(data.threats);
-      setFilteredThreats(data.threats);
-      setStats(data.stats);
-      setTrends(data.trends);
+      const newThreats = data.threats || [];
+      setThreats(newThreats);
+      setFilteredThreats(newThreats);
+      setStats(data.stats || { total: 0, high: 0, medium: 0, low: 0 });
+      if (data.trends) setTrends(data.trends);
 
-      // Trigger Alert if high risk found
-      const highRisk = data.threats.find(t => t.risk_level === 'High');
-      if (highRisk) {
-        setTimeout(() => setActiveAlert(highRisk), 500);
-      }
+      const highRisk = newThreats.find(t => t.risk_level === 'High');
+      if (highRisk) setTimeout(() => setActiveAlert(highRisk), 300);
 
     } catch (err) {
-      console.error(err);
+      console.error('[Dashboard Error]', err);
+      setActiveLog(`ERROR: ${err.message}`);
+      // Show error briefly then clear
+      setTimeout(() => setIsFetching(false), 2000);
+      return; 
     } finally {
       setIsFetching(false);
       setActiveLog('');

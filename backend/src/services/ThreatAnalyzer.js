@@ -1,37 +1,25 @@
+import { GeminiService } from './GeminiService.js';
+
 export class ThreatAnalyzer {
-  static async analyzeTargetedData(scrapedData, domains, keywords) {
-    const results = [];
-    const targets = [...domains, ...keywords];
-
-    for (const dump of scrapedData) {
-      const text = dump.content.toLowerCase();
-      
-      // See if ANY target is inside this dump
-      const foundTargets = targets.filter(t => text.includes(t.toLowerCase()));
-      
-      if (foundTargets.length > 0) {
-        // AI Category Classification Mock
-        let category = 'Leak Data';
-        
-        if (text.includes('cc') || text.includes('cvv') || text.includes('btc') || text.includes('bin') || text.match(/\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b/)) {
-          category = 'Financial Data';
-        } else if (text.includes('ssn') || text.includes('passport') || text.includes('address') || text.includes('hr')) {
-          category = 'PII/Sensitive Data';
-        } else if (text.includes('source code') || text.includes('internal') || text.includes('proprietary')) {
-          category = 'Corporate Secrets';
-        } else if (text.includes('infrastructure') || text.includes('mapping') || text.includes('does anyone know')) {
-          category = 'General Mention';
-        }
-
-        results.push({
-          source_type: dump.url,
-          category,
-          details: `Found targeted entities: ${foundTargets.join(', ')}`,
-          detected_at: new Date().toISOString()
-        });
-      }
-    }
+  static async analyzeTargetedData(hits, domain) {
+    const { redditHits = [], onionHits = [] } = hits;
     
-    return results;
+    console.log(`[ThreatAnalyzer] Processing ${redditHits.length} OSINT hits and ${onionHits.length} Dark Web hits via Gemini 1.5 Pro...`);
+    
+    // Combine hits into a single pool for the AI to analyze
+    const combinedData = [
+      ...redditHits.map(h => ({ ...h, type: 'OSINT' })),
+      ...onionHits.map(h => ({ ...h, type: 'DarkWeb' }))
+    ];
+
+    if (combinedData.length === 0) return [];
+
+    // Call Gemini to analyze the found OSINT and Dark Web data
+    const aiResults = await GeminiService.analyzeIntelligence(domain, combinedData);
+    
+    return aiResults.map(res => ({
+      ...res,
+      detected_at: new Date().toISOString()
+    }));
   }
 }

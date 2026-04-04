@@ -1,49 +1,52 @@
+import { GeminiService } from './GeminiService.js';
+import { AhmiaScraper } from './AhmiaScraper.js';
+
 /**
  * OSINT Intelligence Scanner
- * Simulates deep web scanning by hitting public forum search APIs (like Reddit).
- * This provides real-time, unstructured data for the AI to analyze.
+ * Fetches real-time public chatter AND Dark Web mentions from Ahmia.
  */
 export class IntelligenceScanner {
   static async scanLiveEndpoints(domain) {
-    console.log(`[IntelligenceScanner] Launching live trace for: ${domain}`);
+    console.log(`[IntelligenceScanner] Launching deep trace for: ${domain}`);
 
     try {
-      // We use Reddit's JSON search as a rich "public chatter" source 
-      // where many real-world leaks and mentions first appear.
-      const searchUrl = `https://www.reddit.com/search.json?q=${encodeURIComponent(domain)}+leak&sort=new&limit=5`;
+      // 1. Fetch Real-time OSINT from Reddit (Public Chatter)
+      const searchUrl = `https://www.reddit.com/search.json?q=${encodeURIComponent(domain)}+leak&sort=new&limit=10`;
       
-      const response = await fetch(searchUrl, {
+      const redditResponse = await fetch(searchUrl, {
         headers: {
           'User-Agent': 'DarkTrace-AI/1.0 (Cybersecurity Intelligence Node)'
         }
       });
       
-      if (!response.ok) throw new Error('OSINT Node unavailable');
+      let redditHits = [];
+      if (redditResponse.ok) {
+        const data = await redditResponse.json();
+        const hits = data.data?.children || [];
+        redditHits = hits.map(hit => ({
+          content: `${hit.data.title}\n${hit.data.selftext}`,
+          url: `reddit.com${hit.data.permalink}`,
+          source: 'Public Web (Reddit)'
+        }));
+      }
 
-      const data = await response.json();
-      const hits = data.data?.children || [];
+      // 2. Fetch Real-time Dark Web Mentions (Ahmia)
+      const onionHits = await AhmiaScraper.searchOnion(domain);
 
-      return hits.map((hit, index) => {
-        const post = hit.data;
-        
-        // Simulating the AI's "Threat Level" assessment
-        const isSuspicious = post.title.toLowerCase().includes('leak') || 
-                             post.title.toLowerCase().includes('breach') || 
-                             post.title.toLowerCase().includes('data');
+      // 3. Perform AI Deep Trace (Gemini 1.5 Pro's internal knowledge)
+      console.log(`[IntelligenceScanner] Querying Gemini for historical breaches of ${domain}...`);
+      const aiHistoricalHits = await GeminiService.performDeepTrace(domain);
 
-        return {
-          id: `live_${index}_${Date.now()}`,
-          source_type: `reddit.com/${post.permalink}`,
-          category: isSuspicious ? 'PII/Sensitive Data' : 'General Mention',
-          details: `[REAL-TIME HIT] ${post.title.substring(0, 150)}... Mention found in public chatter.`,
-          detected_at: new Date(post.created_utc * 1000).toISOString(),
-          risk_level: isSuspicious ? 'Medium' : 'Low'
-        };
-      });
+      // Combine both sources for the analyzer
+      return {
+        redditHits,
+        onionHits,
+        aiHistoricalHits
+      };
 
     } catch (error) {
-      console.error('[IntelligenceScanner] Failed to fetch live OSINT data:', error);
-      return []; // Fallback to dummy data only if live fetch fails
+      console.error('[IntelligenceScanner] Trace failed:', error);
+      return { redditHits: [], onionHits: [], aiHistoricalHits: [] };
     }
   }
 }

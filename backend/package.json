@@ -4,14 +4,20 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "dev": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup:env": "echo \"SUPABASE_URL=https://xyzcompany.supabase.co\nSUPABASE_KEY=public-anon-key\" > .env"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.101.1",
+    "axios": "^1.14.0",
+    "cheerio": "^1.2.0",
     "dotenv": "^17.4.0",
     "express": "^5.2.1"
   },
