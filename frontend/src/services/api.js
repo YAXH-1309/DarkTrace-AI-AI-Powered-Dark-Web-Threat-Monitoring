@@ -1,4 +1,4 @@
-const BASE_URL = 'https://darktrace-backend-7zd5.onrender.com/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://darktrace-ai-ai-powered-dark-web-threat.onrender.com/api';
 export const API_BASE_URL = BASE_URL;
 
 export const fetchThreats = async () => {
