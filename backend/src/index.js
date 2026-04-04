@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { startPoller } from './services/Pipeline.js';
 import threatRoutes from './routes/threats.js';
 import orgRoutes from './routes/organization.js';
@@ -7,21 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-
-const allowedOrigin = process.env.FRONTEND_ORIGIN || '*';
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
-  }
-
-  next();
-});
-
+app.use(cors());
 app.use(express.json());
 
 // Routes
