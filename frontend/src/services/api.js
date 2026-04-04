@@ -1,4 +1,5 @@
 const BASE_URL = 'https://darktrace-backend-7zd5.onrender.com/api';
+export const API_BASE_URL = BASE_URL;
 
 export const fetchThreats = async () => {
   const res = await fetch(`${BASE_URL}/threats`);
