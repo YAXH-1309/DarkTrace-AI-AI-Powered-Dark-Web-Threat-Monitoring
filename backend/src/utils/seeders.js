@@ -38,3 +38,43 @@ export async function seedDataSources() {
     }
   }
 }
+
+export async function seedDefaultUsers() {
+  const defaultUsers = [
+    {
+      id: 'u1',
+      username: 'admin123',
+      password: 'admin123',
+      role: 'admin',
+      display_name: 'Alex Rock'
+    },
+    {
+      id: 'u2',
+      username: 'org123',
+      password: 'org123',
+      role: 'organization',
+      display_name: 'Sentintel Org'
+    }
+  ];
+
+  for (const user of defaultUsers) {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', user.username);
+
+    if (error) {
+      console.error(`Error checking user ${user.username}:`, error.message || error);
+      continue;
+    }
+
+    if (!data || data.length === 0) {
+      const { error: insertError } = await supabase.from('users').insert([user]);
+      if (insertError) {
+        console.error(`Error seeding user ${user.username}:`, insertError.message || insertError);
+      } else {
+        console.log(`Seeded default user: ${user.username}`);
+      }
+    }
+  }
+}

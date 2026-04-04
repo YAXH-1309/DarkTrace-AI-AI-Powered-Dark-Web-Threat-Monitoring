@@ -5,6 +5,7 @@ import threatRoutes from './routes/threats.js';
 import orgRoutes from './routes/organization.js';
 import authRoutes from './routes/auth.js';
 import dotenv from 'dotenv';
+import { seedDefaultUsers } from './utils/seeders.js';
 dotenv.config();
 
 const app = express();
@@ -18,6 +19,8 @@ app.use('/api/auth', authRoutes);
 
 async function start() {
   console.log('Initializing DarkTrace AI Backend Pipeline...');
+
+  await seedDefaultUsers();
   
   // Poller is disabled in favor of interactive /api/threats/fetch manual triggers.
   // startPoller();
