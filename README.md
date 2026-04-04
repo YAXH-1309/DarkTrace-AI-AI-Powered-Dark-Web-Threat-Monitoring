@@ -2,7 +2,7 @@
 
 **Sentinel Prism** is a high-fidelity intelligence console designed for real-time, domain-specific dark web threat monitoring. It combines live OSINT scraping with deep-web data analytics to provide organizations and individuals with an immersive, on-demand security overview of their sensitive data leaks.
 
-![Sentinel Dashboard Placeholder](https://via.placeholder.com/1200x600/1a1a2e/ffffff?text=DarkTrace+AI+Dashboard+Premium+Aesthetic)
+![Deployment site]()
 
 ---
 
@@ -95,7 +95,7 @@ To access the console, use one of the predefined operator uplinks or enroll a ne
 * [x] Interactive On-Demand Data Fetching.
 * [x] Live OSINT (Reddit) Integration.
 * [x] Sentinel Auth & Operator Enrollment.
-* [ ] Real Supabase/PostgreSQL persistence.
+* [x] Real Supabase/PostgreSQL persistence.
 * [ ] Advanced TOR hidden-service scraping nodes.
 * [ ] One-click Remediation & Takedown requests.
 
