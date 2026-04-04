@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AlertCircle, User, Search, Filter, CreditCard, Briefcase, FileCode } from 'lucide-react';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend, ArcElement } from 'chart.js';
+import { API_BASE_URL } from '../services/api.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend, ArcElement);
 
@@ -101,7 +102,7 @@ export default function Dashboard() {
     setFilteredThreats([]);
     
     try {
-      const response = await fetch('/api/threats/fetch', {
+      const response = await fetch(`${API_BASE_URL}/threats/fetch`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

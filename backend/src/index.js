@@ -7,6 +7,21 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
+
+const allowedOrigin = process.env.FRONTEND_ORIGIN || '*';
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
 app.use(express.json());
 
 // Routes
